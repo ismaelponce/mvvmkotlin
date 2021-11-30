@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".presentation.listadofactura.FilterViewActivity"
+    tools:ignore="MissingConstraints">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <include
+            android:id="@+id/filter_toolbar"
+            layout="@layout/filter_toolbar" />
+
+        <TextView
+            android:id="@+id/tvFiltrarFacturas"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/tvFiltrarFacturasHeight"
+            android:layout_marginStart="@dimen/marginStart"
+            android:fontFamily="@font/roboto_bold"
+            android:text="@string/tv_filtrar_facturas_text"
+            android:textColor="@color/material_on_surface_emphasis_high_type"
+            android:textSize="@dimen/tvFiltrarFacturasSize"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/filter_toolbar"
+            app:layout_constraintVertical_bias="0"
+            tools:ignore="MissingConstraints" />
+
+        <!-- POR FECHA DE EMISION -->
+        <TextView
+            android:id="@+id/tvFechaEmision"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto_bold"
+            android:text="@string/tv_con_fecha_de_emision_text"
+            android:textColor="@color/material_on_surface_emphasis_high_type"
+            android:textSize="@dimen/tvTitlesSize"
+            app:layout_constraintStart_toStartOf="@+id/tvFiltrarFacturas"
+            app:layout_constraintTop_toBottomOf="@+id/tvFiltrarFacturas"
+            tools:ignore="MissingConstraints" />
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/marginStart"
+            android:layout_marginEnd="@dimen/marginTop"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toStartOf="@+id/tvFechaEmision"
+            app:layout_constraintTop_toBottomOf="@+id/tvFechaEmision">
+
+            <RelativeLayout
+                android:id="@+id/relativeLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/marginTop"
+                    android:layout_marginBottom="@dimen/marginBottom"
+                    android:text="@string/tv_desde_text" />
+
+                <EditText
+                    android:id="@+id/etDesde"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/etFechasMarginTop"
+                    android:layout_marginBottom="@dimen/marginBottom"
+                    android:autofillHints="true"
+                    android:clickable="false"
+                    android:focusable="false"
+                    android:hint="@string/date_placeholder"
+                    android:inputType="date"
+                    android:minHeight="@dimen/etFechasMinHeight"
+                    tools:ignore="TextContrastCheck" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/relativeLayout">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/marginTop"
+                    android:layout_marginBottom="@dimen/marginBottom"
+                    android:text="@string/tv_hasta_text" />
+
+                <EditText
+                    android:id="@+id/etHasta"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/etFechasMarginTop"
+                    android:layout_marginBottom="@dimen/marginBottom"
+                    android:autofillHints="true"
+                    android:clickable="false"
+                    android:focusable="false"
+                    android:hint="@string/date_placeholder"
+                    android:inputType="date"
+                    android:minHeight="@dimen/etFechasMinHeight"
+                    tools:ignore="TextContrastCheck" />
+            </RelativeLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <!-- DIVIDER LINE -->
+        <View
+            android:id="@+id/view"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dividerHeight"
+            android:layout_marginStart="@dimen/marginStart"
+            android:layout_marginTop="@dimen/marginTop"
+            android:layout_marginEnd="@dimen/marginEnd"
+            android:background="@color/dividerBg"
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
+
+        <!-- POR IMPORTE -->
+
+        <TextView
+            android:id="@+id/tvImporte"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/marginTop"
+            android:fontFamily="@font/roboto_bold"
+            android:text="@string/tv_por_un_importe_de_hasta_text"
+            android:textColor="@color/material_on_surface_emphasis_high_type"
+            android:textSize="@dimen/tvTitlesSize"
+            app:layout_constraintStart_toStartOf="@+id/tvFiltrarFacturas"
+            app:layout_constraintTop_toBottomOf="@+id/view" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayoutImporte"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/marginStart"
+            android:layout_marginEnd="@dimen/marginEnd"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toStartOf="@+id/tvImporte"
+            app:layout_constraintTop_toBottomOf="@+id/tvImporte">
+
+
+            <TextView
+                android:id="@+id/tvImporteDinamico"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/green_500"
+                android:textSize="@dimen/tvTitlesSize"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="5" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/local_currency_sign"
+                android:textColor="@color/green_500"
+                android:textSize="@dimen/tvTitlesSize"
+                app:layout_constraintStart_toEndOf="@+id/tvImporteDinamico" />
+
+            <SeekBar
+                android:id="@+id/seekbarImporte"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="100"
+                android:min="0"
+                android:padding="@dimen/seekbarPadding"
+                app:layout_constraintTop_toBottomOf="@+id/tvImporteDinamico"
+                tools:targetApi="o" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <!-- DIVIDER LINE -->
+        <View
+            android:id="@+id/view2"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dividerHeight"
+            android:layout_marginTop="@dimen/marginTop"
+            android:background="@color/dividerBg"
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayoutImporte" />
+
+        <!-- POR ESTADO -->
+
+        <TextView
+            android:id="@+id/tvEstado"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/marginTop"
+            android:fontFamily="@font/roboto_bold"
+            android:text="@string/tv_por_estado_text"
+            android:textColor="@color/material_on_surface_emphasis_high_type"
+            android:textSize="@dimen/tvTitlesSize"
+            app:layout_constraintStart_toStartOf="@+id/tvFiltrarFacturas"
+            app:layout_constraintTop_toBottomOf="@+id/view2"
+            tools:ignore="MissingConstraints" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayoutEstado"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/marginStart"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toStartOf="@+id/tvImporte"
+            app:layout_constraintTop_toBottomOf="@+id/tvEstado">
+
+            <LinearLayout
+                android:id="@+id/llCheckboxes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/marginTop"
+                android:orientation="vertical">
+
+                <CheckBox
+                    android:id="@+id/cbPagadas"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/cb_pagadas_text"
+                    android:textSize="@dimen/cbTextSize" />
+
+                <CheckBox
+                    android:id="@+id/cbAnuladas"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/cb_anuladas_text"
+                    android:textSize="@dimen/cbTextSize" />
+
+                <CheckBox
+                    android:id="@+id/cbCuotaFija"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/cb_cuota_fija_text"
+                    android:textSize="@dimen/cbTextSize" />
+
+                <CheckBox
+                    android:id="@+id/cbPendientesDePago"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/cb_pendientes_de_pago_text"
+                    android:textSize="@dimen/cbTextSize" />
+
+                <CheckBox
+                    android:id="@+id/cbPlanDePago"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/cb_plan_de_pago_text"
+                    android:textSize="@dimen/cbTextSize" />
+
+
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <Button
+            android:id="@+id/aplicar_button"
+            android:layout_width="@dimen/btnAplicarWidth"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/marginTop"
+            android:background="@drawable/aplicar_button"
+            android:text="@string/btn_aplicar_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayoutEstado"
+            tools:ignore="TextContrastCheck" />
+
+        <TextView
+            android:id="@+id/quitar_button"
+            android:layout_width="@dimen/btnEliminarWidth"
+            android:textColor="@color/green_500"
+            android:textSize="@dimen/tvEliminarFiltros"
+            android:textAlignment="center"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/marginTop"
+            android:layout_marginBottom="@dimen/marginBottomBottom"
+            android:text="@string/btn_eliminar_filtros_text"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/aplicar_button" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

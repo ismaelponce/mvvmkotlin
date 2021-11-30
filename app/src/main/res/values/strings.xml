@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">ListadoFacturasMVVM</string>
+    <string name="item_invoice_fecha">Fecha</string>
+    <string name="item_invoice_estado">Estado</string>
+    <string name="item_invoice_importe">Importe</string>
+    <string name="toolbar_left_arrow_text">Left arrow for going back</string>
+    <string name="toolbar_consumo_text">Consumo</string>
+    <string name="toolbar_filter_button">Filter button</string>
+    <string name="filter_toolbar_close_button">Close button</string>
+    <string name="facturas_text">Facturas</string>
+    <string name="btn_eliminar_filtros_text">Eliminar filtros</string>
+    <string name="btn_aplicar_text">Aplicar</string>
+    <string name="cb_plan_de_pago_text">Plan de pago</string>
+    <string name="cb_pendientes_de_pago_text">Pendientes de pago</string>
+    <string name="cb_cuota_fija_text">Cuota fija</string>
+    <string name="cb_anuladas_text">Anuladas</string>
+    <string name="cb_pagadas_text">Pagadas</string>
+    <string name="tv_por_estado_text">Por estado</string>
+    <string name="local_currency_sign">€</string>
+    <string name="tv_por_un_importe_de_hasta_text">Por un importe de hasta</string>
+    <string name="date_placeholder">día/mes/año</string>
+    <string name="tv_hasta_text">Hasta</string>
+    <string name="tv_desde_text">Desde</string>
+    <string name="tv_con_fecha_de_emision_text">Con fecha de emisión</string>
+    <string name="tv_filtrar_facturas_text">Filtrar facturas</string>
+    <string name="alertDialogTitle">Información</string>
+    <string name="alertDialogMessage">Esta funcionalidad aún no está disponible</string>
+    <string name="alertDialogPositiveBtn">Cerrar</string>
+</resources>

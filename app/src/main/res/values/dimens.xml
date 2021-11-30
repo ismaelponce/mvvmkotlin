@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="marginTop">16dp</dimen>
+    <dimen name="marginStart">16dp</dimen>
+    <dimen name="marginEnd">16dp</dimen>
+    <dimen name="marginBottom">16dp</dimen>
+
+    <dimen name="etFechasMarginTop">32dp</dimen>
+    <dimen name="etFechasMinHeight">48dp</dimen>
+
+    <dimen name="dividerHeight">2dp</dimen>
+    <dimen name="seekbarPadding">16dp</dimen>
+    <dimen name="toolbarPadding">16dp</dimen>
+
+    <dimen name="tvFiltrarFacturasHeight">80dp</dimen>
+    <dimen name="tvFiltrarFacturasSize">48sp</dimen>
+    <dimen name="tvTitlesSize">24sp</dimen>
+    <dimen name="tvFacturasHeight">96dp</dimen>
+    <dimen name="tvFacturasSize">48sp</dimen>
+
+    <dimen name="cbTextSize">16sp</dimen>
+
+    <dimen name="btnAplicarWidth">300dp</dimen>
+    <dimen name="btnEliminarWidth">300dp</dimen>
+    <dimen name="btnCloseWidth">24dp</dimen>
+    <dimen name="btnCloseHeight">24dp</dimen>
+    <dimen name="btnFilterWidth">24dp</dimen>
+    <dimen name="btnFilterHeight">24dp</dimen>
+
+    <dimen name="itemInvoiceHeight">64dp</dimen>
+    <dimen name="itemInvoiceMarginTop">8dp</dimen>
+    <dimen name="itemInvoiceMarginEnd">8dp</dimen>
+    <dimen name="itemInvoiceMarginBottom">8dp</dimen>
+    <dimen name="tvFechaSize">24sp</dimen>
+    <dimen name="tvImporteSize">24sp</dimen>
+    <dimen name="tvEstadoSize">16sp</dimen>
+    <dimen name="tvConsumoSize">16sp</dimen>
+    <dimen name="tvEliminarFiltros">16sp</dimen>
+
+    <dimen name="marginBottomBottom">40dp</dimen>
+
+</resources>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/toolbarPadding">
+
+
+    <ImageView
+        android:id="@+id/chevronLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:contentDescription="@string/toolbar_left_arrow_text"
+        android:src="@drawable/ic_baseline_chevron_left_24"
+        tools:ignore="ImageContrastCheck" />
+
+    <TextView
+        android:id="@+id/tvConsumo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="@dimen/marginStart"
+        android:layout_toEndOf="@id/chevronLeft"
+        android:text="@string/toolbar_consumo_text"
+        android:textColor="@color/tvConsumoColor"
+        android:textSize="@dimen/tvConsumoSize"
+        tools:ignore="RelativeOverlap,TextContrastCheck" />
+
+    <ImageView
+        android:id="@+id/filterButton"
+        android:layout_width="@dimen/btnFilterWidth"
+        android:layout_height="@dimen/btnFilterHeight"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:contentDescription="@string/toolbar_filter_button"
+        android:src="@drawable/img"
+        tools:ignore="RedundantDescriptionCheck" />
+
+
+</RelativeLayout>
