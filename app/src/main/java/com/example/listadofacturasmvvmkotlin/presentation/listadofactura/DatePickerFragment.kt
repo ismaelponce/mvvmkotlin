@@ -1,72 +1,58 @@
-package com.example.listadofacturasmvvmkotlin.presentation.listadofactura;
+package com.example.listadofacturasmvvmkotlin.presentation.listadofactura
 
-import static com.example.listadofacturasmvvmkotlin.utils.Constants.LOCAL_DATE_TIME_FORMAT;
+import android.app.DatePickerDialog.OnDateSetListener
+import android.os.Bundle
+import android.app.DatePickerDialog
+import android.app.Dialog
+import androidx.fragment.app.DialogFragment
+import org.joda.time.format.DateTimeFormat
+import com.example.listadofacturasmvvmkotlin.presentation.listadofactura.DatePickerFragment
+import com.example.listadofacturasmvvmkotlin.utils.Constants.LOCAL_DATE_TIME_FORMAT
+import org.joda.time.DateTime
+import java.util.*
 
-import android.app.DatePickerDialog;
-import android.app.Dialog;
-import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
-
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-
-import java.util.Calendar;
-
-public class DatePickerFragment extends DialogFragment {
-
-    private DatePickerDialog.OnDateSetListener listener;
-
-
-    private String desdeMaxDate = "";
-    private String hastaMinDate = "";
-
-    public static DatePickerFragment newInstance(DatePickerDialog.OnDateSetListener listener) {
-        DatePickerFragment fragment = new DatePickerFragment();
-        fragment.setListener(listener);
-        return fragment;
+class DatePickerFragment : DialogFragment() {
+    private var listener: OnDateSetListener? = null
+    private var desdeMaxDate = ""
+    private var hastaMinDate = ""
+    fun setListener(listener: OnDateSetListener?) {
+        this.listener = listener
     }
 
-    public void setListener(DatePickerDialog.OnDateSetListener listener) {
-        this.listener = listener;
-    }
-
-    @NonNull
-    @Override
-    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-
-        final Calendar c = Calendar.getInstance();
-        int year = c.get(Calendar.YEAR);
-        int month = c.get(Calendar.MONTH);
-        int day = c.get(Calendar.DAY_OF_MONTH);
-
-        DatePickerDialog picker = new DatePickerDialog(getActivity(), listener, year, month, day);
-
-        if (!desdeMaxDate.equals("")) {
-            DateTime dateParsed = DateTime.parse(desdeMaxDate, DateTimeFormat.forPattern(LOCAL_DATE_TIME_FORMAT));
-            picker.getDatePicker().setMaxDate(dateParsed.getMillis());
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val c = Calendar.getInstance()
+        val year = c[Calendar.YEAR]
+        val month = c[Calendar.MONTH]
+        val day = c[Calendar.DAY_OF_MONTH]
+        val picker = DatePickerDialog(requireActivity(), listener, year, month, day)
+        if (desdeMaxDate != "") {
+            val dateParsed =
+                DateTime.parse(desdeMaxDate, DateTimeFormat.forPattern(LOCAL_DATE_TIME_FORMAT))
+            picker.datePicker.maxDate = dateParsed.millis
         } else {
-            picker.getDatePicker().setMaxDate(c.getTimeInMillis());
+            picker.datePicker.maxDate = c.timeInMillis
         }
-
-        if (!hastaMinDate.equals("")) {
-            DateTime dateParsed = DateTime.parse(hastaMinDate, DateTimeFormat.forPattern(LOCAL_DATE_TIME_FORMAT));
-            picker.getDatePicker().setMinDate(dateParsed.getMillis());
+        if (hastaMinDate != "") {
+            val dateParsed =
+                DateTime.parse(hastaMinDate, DateTimeFormat.forPattern(LOCAL_DATE_TIME_FORMAT))
+            picker.datePicker.minDate = dateParsed.millis
         }
-
-        return picker;
+        return picker
     }
 
-
-    public void setDesdeMaxDate(String desdeMaxDate) {
-        this.desdeMaxDate = desdeMaxDate;
+    fun setDesdeMaxDate(desdeMaxDate: String) {
+        this.desdeMaxDate = desdeMaxDate
     }
 
-    public void setHastaMinDate(String hastaMinDate) {
-        this.hastaMinDate = hastaMinDate;
+    fun setHastaMinDate(hastaMinDate: String) {
+        this.hastaMinDate = hastaMinDate
     }
 
-
+    companion object {
+        fun newInstance(listener: OnDateSetListener?): DatePickerFragment {
+            val fragment = DatePickerFragment()
+            fragment.setListener(listener)
+            return fragment
+        }
+    }
 }
