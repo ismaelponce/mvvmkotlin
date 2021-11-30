@@ -1,21 +1,12 @@
-package com.example.listadofacturasmvvmkotlin.presentation.listadofactura.viewmodel;
+package com.example.listadofacturasmvvmkotlin.presentation.listadofactura.viewmodel
 
-import android.app.Application;
+import android.app.Application
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModel
+import com.example.listadofacturasmvvmkotlin.presentation.listadofactura.viewmodel.ListadoViewModel
 
-import androidx.annotation.NonNull;
-import androidx.lifecycle.ViewModel;
-import androidx.lifecycle.ViewModelProvider;
-
-public class ViewModelProviderFactory implements ViewModelProvider.Factory {
-
-    private final Application app;
-    public ViewModelProviderFactory(Application application) {
-        this.app = application;
-    }
-
-    @NonNull
-    @Override
-    public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-        return (T)  new ListadoViewModel(app);
+class ViewModelProviderFactory(private val app: Application) : ViewModelProvider.Factory {
+    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        return ListadoViewModel(app) as T
     }
 }

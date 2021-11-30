@@ -1,215 +1,190 @@
-package com.example.listadofacturasmvvmkotlin.presentation.listadofactura.viewmodel;
+package com.example.listadofacturasmvvmkotlin.presentation.listadofactura.viewmodel
 
-import static com.example.listadofacturasmvvmkotlin.utils.Constants.ANULADA_STRING;
-import static com.example.listadofacturasmvvmkotlin.utils.Constants.CUOTA_FIJA_STRING;
-import static com.example.listadofacturasmvvmkotlin.utils.Constants.LOCAL_DATE_TIME_FORMAT;
-import static com.example.listadofacturasmvvmkotlin.utils.Constants.PAGADA_STRING;
-import static com.example.listadofacturasmvvmkotlin.utils.Constants.PENDIENTE_PAGO_STRING;
-import static com.example.listadofacturasmvvmkotlin.utils.Constants.PLAN_PAGO_STRING;
+import android.app.Application
+import android.content.Context
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.MutableLiveData
+import com.example.listadofacturasmvvmkotlin.data.model.InvoiceVO
+import com.example.listadofacturasmvvmkotlin.data.model.FiltersWrapper
+import com.example.listadofacturasmvvmkotlin.domain.usecase.GetInvoicesUseCase
+import com.example.listadofacturasmvvmkotlin.domain.handlers.DefaultUseCaseCallbackHandler
+import com.example.listadofacturasmvvmkotlin.domain.executor.UseCaseCallback
+import com.example.listadofacturasmvvmkotlin.domain.interfaces.InvoiceRepositoryInterface
+import com.example.listadofacturasmvvmkotlin.data.repository.InvoiceApiRepository
+import com.example.listadofacturasmvvmkotlin.data.repository.InvoiceDbRepository
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
+import org.joda.time.format.DateTimeFormat
+import androidx.lifecycle.LiveData
+import com.example.listadofacturasmvvmkotlin.utils.Constants.ANULADA_STRING
+import com.example.listadofacturasmvvmkotlin.utils.Constants.CUOTA_FIJA_STRING
+import com.example.listadofacturasmvvmkotlin.utils.Constants.LOCAL_DATE_TIME_FORMAT
+import com.example.listadofacturasmvvmkotlin.utils.Constants.PAGADA_STRING
+import com.example.listadofacturasmvvmkotlin.utils.Constants.PENDIENTE_PAGO_STRING
+import com.example.listadofacturasmvvmkotlin.utils.Constants.PLAN_PAGO_STRING
+import org.joda.time.DateTime
+import java.util.ArrayList
+import java.util.concurrent.Executors
 
-import android.app.Application;
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
+class ListadoViewModel(application: Application?) : AndroidViewModel(application!!) {
+    var invoices: MutableLiveData<List<InvoiceVO>>? = null
+        private set
+    private var myWrapper: FiltersWrapper
+    private val _isLoading: MutableLiveData<Boolean>
+    var importeMaximo: Int
+        private set
 
-import androidx.lifecycle.AndroidViewModel;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-
-import com.example.listadofacturasmvvmkotlin.data.model.FiltersWrapper;
-import com.example.listadofacturasmvvmkotlin.data.model.InvoiceVO;
-import com.example.listadofacturasmvvmkotlin.data.repository.InvoiceApiRepository;
-import com.example.listadofacturasmvvmkotlin.data.repository.InvoiceDbRepository;
-import com.example.listadofacturasmvvmkotlin.domain.executor.UseCaseCallback;
-import com.example.listadofacturasmvvmkotlin.domain.handlers.DefaultUseCaseCallbackHandler;
-import com.example.listadofacturasmvvmkotlin.domain.interfaces.InvoiceRepositoryInterface;
-import com.example.listadofacturasmvvmkotlin.domain.usecase.GetInvoicesUseCase;
-
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.concurrent.Executors;
-
-public class ListadoViewModel extends AndroidViewModel {
-
-    private MutableLiveData<List<InvoiceVO>> invoices;
-    private FiltersWrapper myWrapper;
-    private final MutableLiveData<Boolean> _isLoading;
-    private int importeMaximo;
-
-    public ListadoViewModel(Application application){
-        super(application);
-        setInvoices(new MutableLiveData<>());
-        _isLoading = new MutableLiveData<>();
-        myWrapper = new FiltersWrapper();
-        importeMaximo = 0;
-    }
-
-    public void loadInvoices() {
-        GetInvoicesUseCase casoUso;
+    fun loadInvoices() {
+        val casoUso: GetInvoicesUseCase
 
         // Se crea el caso de uso
-        casoUso = new GetInvoicesUseCase(new DefaultUseCaseCallbackHandler(), getInvoiceRepository());
+        casoUso = GetInvoicesUseCase(DefaultUseCaseCallbackHandler(), invoiceRepository)
 
         // Se muestra un progress bar
-        _isLoading.postValue(true);
+        _isLoading.postValue(true)
 
         // Se personaliza el caso de uso
-        casoUso.customize(new UseCaseCallback<List<InvoiceVO>>() {
-            @Override
-            public void onResult(List<InvoiceVO> result) {
-                List<InvoiceVO> listaFacturas = result;
-                getImporteMaximoModel(result);
-                listaFacturas = filterList(listaFacturas);
-                getInvoices().postValue(listaFacturas);
+        casoUso.customize(object : UseCaseCallback<List<InvoiceVO?>?> {
+            override fun onResult(result: List<InvoiceVO?>?) {
+                var listaFacturas = result
+                getImporteMaximoModel(result as List<InvoiceVO>)
+                listaFacturas = filterList(listaFacturas as List<InvoiceVO>)
+                invoices!!.postValue(listaFacturas)
 
                 // Se oculta el progress bar
-                _isLoading.postValue(false);
+                _isLoading.postValue(false)
             }
-        });
+        })
 
         // Se ejecuta el caso de uso
-        Executors.newCachedThreadPool().execute(casoUso);
+        Executors.newCachedThreadPool().execute(casoUso)
     }
 
-    private InvoiceRepositoryInterface getInvoiceRepository() {
-        if (hasInternetConnection()) {
-            return new InvoiceApiRepository(getApplication().getApplicationContext());
-        }
+    private val invoiceRepository: InvoiceRepositoryInterface
+        private get() = if (hasInternetConnection()) {
+            InvoiceApiRepository(getApplication<Application>().applicationContext)
+        } else InvoiceDbRepository(getApplication<Application>().applicationContext)
 
-        return new InvoiceDbRepository(getApplication().getApplicationContext());
-
+    private fun hasInternetConnection(): Boolean {
+        val connected: Boolean
+        val cm =
+            getApplication<Application>().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val nInfo = cm.activeNetworkInfo
+        connected = nInfo != null && nInfo.isAvailable && nInfo.isConnected
+        return connected
     }
 
-    private Boolean hasInternetConnection(){
-        boolean connected;
-        ConnectivityManager cm = (ConnectivityManager) getApplication().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo nInfo = cm.getActiveNetworkInfo();
-        connected = nInfo != null && nInfo.isAvailable() && nInfo.isConnected();
-        return connected;
-    }
-
-
-    private List<InvoiceVO> filterList(List<InvoiceVO> listaFacturas) {
-        List<InvoiceVO> filteredList = new ArrayList<>(listaFacturas);
-
-        ArrayList<String> checks = new ArrayList<>();
-
-        if (myWrapper.isPagadas()) {
-            checks.add(PAGADA_STRING);
+    private fun filterList(listaFacturas: List<InvoiceVO>): List<InvoiceVO> {
+        val filteredList: MutableList<InvoiceVO> = ArrayList(listaFacturas)
+        val checks = ArrayList<String>()
+        if (myWrapper.isPagadas) {
+            checks.add(PAGADA_STRING)
         }
-        if (myWrapper.isPendientesPago()) {
-            checks.add(PENDIENTE_PAGO_STRING);
+        if (myWrapper.isPendientesPago) {
+            checks.add(PENDIENTE_PAGO_STRING)
         }
-        if (myWrapper.isAnuladas()) {
-            checks.add(ANULADA_STRING);
+        if (myWrapper.isAnuladas) {
+            checks.add(ANULADA_STRING)
         }
-        if (myWrapper.isCuotaFija()) {
-            checks.add(CUOTA_FIJA_STRING);
+        if (myWrapper.isCuotaFija) {
+            checks.add(CUOTA_FIJA_STRING)
         }
-        if (myWrapper.isPlanPago()) {
-            checks.add(PLAN_PAGO_STRING);
+        if (myWrapper.isPlanPago) {
+            checks.add(PLAN_PAGO_STRING)
         }
-
-
-        if (!myWrapper.getHasta().isEmpty() && !myWrapper.getDesde().isEmpty()) {
-            Iterator<InvoiceVO> iter = filteredList.iterator();
+        if (!myWrapper.hasta.isEmpty() && !myWrapper.desde.isEmpty()) {
+            val iter = filteredList.iterator()
             while (iter.hasNext()) {
-                InvoiceVO invoice = iter.next();
-                DateTime fechaImporte = DateTime.parse(invoice.getFecha(), DateTimeFormat.forPattern(LOCAL_DATE_TIME_FORMAT));
-                DateTime hasta = DateTime.parse(myWrapper.getHasta(), DateTimeFormat.forPattern(LOCAL_DATE_TIME_FORMAT));
-                DateTime desde = DateTime.parse(myWrapper.getDesde(), DateTimeFormat.forPattern(LOCAL_DATE_TIME_FORMAT));
-
-
+                val invoice = iter.next()
+                val fechaImporte =
+                    DateTime.parse(invoice.fecha, DateTimeFormat.forPattern(LOCAL_DATE_TIME_FORMAT))
+                val hasta = DateTime.parse(
+                    myWrapper.hasta,
+                    DateTimeFormat.forPattern(LOCAL_DATE_TIME_FORMAT)
+                )
+                val desde = DateTime.parse(
+                    myWrapper.desde,
+                    DateTimeFormat.forPattern(LOCAL_DATE_TIME_FORMAT)
+                )
                 if (fechaImporte.isAfter(hasta) || fechaImporte.isBefore(desde)) {
-                    iter.remove();
+                    iter.remove()
                 }
             }
-        } else if (!myWrapper.getHasta().isEmpty()) {
-            Iterator<InvoiceVO> iter = filteredList.iterator();
+        } else if (!myWrapper.hasta.isEmpty()) {
+            val iter = filteredList.iterator()
             while (iter.hasNext()) {
-                InvoiceVO invoice = iter.next();
-                DateTime fechaImporte = DateTime.parse(invoice.getFecha(), DateTimeFormat.forPattern(LOCAL_DATE_TIME_FORMAT));
-                DateTime hasta = DateTime.parse(myWrapper.getHasta(), DateTimeFormat.forPattern(LOCAL_DATE_TIME_FORMAT));
-
+                val invoice = iter.next()
+                val fechaImporte =
+                    DateTime.parse(invoice.fecha, DateTimeFormat.forPattern(LOCAL_DATE_TIME_FORMAT))
+                val hasta = DateTime.parse(
+                    myWrapper.hasta,
+                    DateTimeFormat.forPattern(LOCAL_DATE_TIME_FORMAT)
+                )
                 if (fechaImporte.isAfter(hasta)) {
-                    iter.remove();
+                    iter.remove()
                 }
             }
-        } else if (!myWrapper.getDesde().isEmpty()) {
-            Iterator<InvoiceVO> iter = filteredList.iterator();
-
+        } else if (!myWrapper.desde.isEmpty()) {
+            val iter = filteredList.iterator()
             while (iter.hasNext()) {
-                InvoiceVO invoice = iter.next();
-                DateTime fechaImporte = DateTime.parse(invoice.getFecha(), DateTimeFormat.forPattern(LOCAL_DATE_TIME_FORMAT));
-                DateTime desde = DateTime.parse(myWrapper.getDesde(), DateTimeFormat.forPattern(LOCAL_DATE_TIME_FORMAT));
-
+                val invoice = iter.next()
+                val fechaImporte =
+                    DateTime.parse(invoice.fecha, DateTimeFormat.forPattern(LOCAL_DATE_TIME_FORMAT))
+                val desde = DateTime.parse(
+                    myWrapper.desde,
+                    DateTimeFormat.forPattern(LOCAL_DATE_TIME_FORMAT)
+                )
                 if (fechaImporte.isBefore(desde)) {
-                    iter.remove();
+                    iter.remove()
                 }
             }
-
         }
-
-        if (myWrapper.getMax() > 0) {
-            Iterator<InvoiceVO> iter = filteredList.iterator();
+        if (myWrapper.max > 0) {
+            val iter = filteredList.iterator()
             while (iter.hasNext()) {
-                InvoiceVO invoice = iter.next();
-
-                if (invoice.getImporteOrdenacion() > myWrapper.getMax()) {
-                    iter.remove();
+                val invoice = iter.next()
+                if (invoice.importeOrdenacion > myWrapper.max) {
+                    iter.remove()
                 }
             }
         }
-
-        if (checks.size() > 0) {
-            Iterator<InvoiceVO> iter = filteredList.iterator();
+        if (checks.size > 0) {
+            val iter = filteredList.iterator()
             while (iter.hasNext()) {
-                InvoiceVO invoice = iter.next();
-
-                if (!checks.contains(invoice.getDescEstado())) {
-                    iter.remove();
+                val invoice = iter.next()
+                if (!checks.contains(invoice.descEstado)) {
+                    iter.remove()
                 }
             }
         }
-
-        return  filteredList;
+        return filteredList
     }
 
-    public void setWrapper(FiltersWrapper myWrapper) {
-        this.myWrapper = myWrapper;
+    fun setWrapper(myWrapper: FiltersWrapper) {
+        this.myWrapper = myWrapper
     }
 
-    private void getImporteMaximoModel(List<InvoiceVO> listaFacturas) {
-        int max = 0;
-
-        for (InvoiceVO i: listaFacturas) {
-            if (i.getImporteOrdenacion() >= max) {
-                max = (int) i.getImporteOrdenacion();
+    private fun getImporteMaximoModel(listaFacturas: List<InvoiceVO>) {
+        var max = 0
+        for (i in listaFacturas) {
+            if (i.importeOrdenacion >= max) {
+                max = i.importeOrdenacion.toInt()
             }
         }
-
-        this.importeMaximo = max;
+        importeMaximo = max
     }
 
-    public int getImporteMaximo() {
-        return this.importeMaximo;
+    private fun setInvoices(invoices: MutableLiveData<List<InvoiceVO>>) {
+        this.invoices = invoices
     }
 
+    val isLoading: LiveData<Boolean>
+        get() = _isLoading
 
-    public MutableLiveData<List<InvoiceVO>> getInvoices(){
-        return this.invoices;
+    init {
+        setInvoices(MutableLiveData())
+        _isLoading = MutableLiveData()
+        myWrapper = FiltersWrapper()
+        importeMaximo = 0
     }
-
-    private void setInvoices(MutableLiveData<List<InvoiceVO>> invoices) {
-        this.invoices = invoices;
-    }
-
-    public LiveData<Boolean> isLoading(){
-        return this._isLoading;
-    }
-
 }

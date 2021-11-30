@@ -77,7 +77,7 @@ class ListadoViewActivity : AppCompatActivity() {
         viewmodel!!.loadInvoices()
 
         // Se actualiza el recycler mediante el adapter cuando cambia el listado en el viewmodel
-        viewmodel!!.invoices.observe(this, { invoices: List<InvoiceVO>? ->
+        viewmodel!!.invoices?.observe(this, { invoices: List<InvoiceVO>? ->
             list.clear()
             list.addAll(invoices!!)
             adapter!!.notifyDataSetChanged()
