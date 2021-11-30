@@ -2,7 +2,6 @@ package com.example.listadofacturasmvvmkotlin.presentation.listadofactura
 
 import androidx.appcompat.app.AppCompatActivity
 import com.example.listadofacturasmvvmkotlin.presentation.listadofactura.viewmodel.ListadoViewModel
-import com.example.listadofacturasmvvmkotlin.presentation.listadofactura.InvoiceAdapter
 import com.example.listadofacturasmvvmkotlin.data.model.InvoiceVO
 import com.example.listadofacturasmvvmkotlin.data.model.FiltersWrapper
 import android.os.Bundle
@@ -13,14 +12,13 @@ import kotlin.Throws
 import androidx.lifecycle.ViewModelProvider
 import com.example.listadofacturasmvvmkotlin.presentation.listadofactura.viewmodel.ViewModelProviderFactory
 import android.content.Intent
-import com.example.listadofacturasmvvmkotlin.presentation.listadofactura.FilterViewActivity
 import com.google.gson.Gson
 import com.example.listadofacturasmvvmkotlin.R
 import android.content.DialogInterface
-import android.app.Activity
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import com.example.listadofacturasmvvmkotlin.databinding.ActivityMainBinding
+import com.example.listadofacturasmvvmkotlin.presentation.listadofactura.InvoiceAdapter.OnItemClickListener
 import java.io.IOException
 import java.util.ArrayList
 import com.example.listadofacturasmvvmkotlin.utils.Constants.KEYMAX
@@ -54,7 +52,11 @@ class ListadoViewActivity : AppCompatActivity() {
 
     private fun initRecycler() {
         binding!!.rvFacturas.layoutManager = LinearLayoutManager(this)
-        adapter = InvoiceAdapter(list) { position: InvoiceVO? -> showAlertDialog() }
+        adapter = InvoiceAdapter(list, object : OnItemClickListener {
+            override fun onItemClick(position: InvoiceVO?) {
+                showAlertDialog()
+            }
+        })
         binding!!.rvFacturas.adapter = adapter
         binding!!.rvFacturas.addItemDecoration(
             DividerItemDecoration(
