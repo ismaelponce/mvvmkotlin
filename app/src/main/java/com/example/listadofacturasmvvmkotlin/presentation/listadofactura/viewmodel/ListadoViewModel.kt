@@ -16,12 +16,14 @@ import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import org.joda.time.format.DateTimeFormat
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.viewModelScope
 import com.example.listadofacturasmvvmkotlin.utils.Constants.ANULADA_STRING
 import com.example.listadofacturasmvvmkotlin.utils.Constants.CUOTA_FIJA_STRING
 import com.example.listadofacturasmvvmkotlin.utils.Constants.LOCAL_DATE_TIME_FORMAT
 import com.example.listadofacturasmvvmkotlin.utils.Constants.PAGADA_STRING
 import com.example.listadofacturasmvvmkotlin.utils.Constants.PENDIENTE_PAGO_STRING
 import com.example.listadofacturasmvvmkotlin.utils.Constants.PLAN_PAGO_STRING
+import kotlinx.coroutines.launch
 import org.joda.time.DateTime
 import java.util.ArrayList
 import java.util.concurrent.Executors
@@ -35,6 +37,8 @@ class ListadoViewModel(application: Application?) : AndroidViewModel(application
         private set
 
     fun loadInvoices() {
+
+
         val casoUso: GetInvoicesUseCase
 
         // Se crea el caso de uso
@@ -49,7 +53,7 @@ class ListadoViewModel(application: Application?) : AndroidViewModel(application
                 var listaFacturas = result
                 getImporteMaximoModel(result as List<InvoiceVO>)
                 listaFacturas = filterList(listaFacturas as List<InvoiceVO>)
-                invoices!!.postValue(listaFacturas)
+                invoices!!.postValue(listaFacturas!!)
 
                 // Se oculta el progress bar
                 _isLoading.postValue(false)
