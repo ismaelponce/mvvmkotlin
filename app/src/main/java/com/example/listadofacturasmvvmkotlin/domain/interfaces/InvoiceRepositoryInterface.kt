@@ -1,10 +1,9 @@
-package com.example.listadofacturasmvvmkotlin.domain.interfaces;
+package com.example.listadofacturasmvvmkotlin.domain.interfaces
 
-import com.example.listadofacturasmvvmkotlin.data.model.InvoiceVO;
+import kotlin.Throws
+import com.example.listadofacturasmvvmkotlin.data.model.InvoiceVO
+import java.io.IOException
 
-import java.io.IOException;
-import java.util.List;
-
-public interface InvoiceRepositoryInterface {
-    List<InvoiceVO> getInvoices() throws IOException;
+interface InvoiceRepositoryInterface {
+    suspend fun getInvoices(): List<InvoiceVO?>?
 }

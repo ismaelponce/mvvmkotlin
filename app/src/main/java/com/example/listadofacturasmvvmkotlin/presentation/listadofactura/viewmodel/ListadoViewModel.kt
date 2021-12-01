@@ -39,6 +39,19 @@ class ListadoViewModel(application: Application?) : AndroidViewModel(application
     fun loadInvoices() {
 
 
+        viewModelScope.launch {
+            var casoUso = GetInvoicesUseCase(invoiceRepository)
+            val result = casoUso()
+            var listaFacturas = result
+            getImporteMaximoModel(result as List<InvoiceVO>)
+            listaFacturas = filterList(listaFacturas as List<InvoiceVO>)
+            invoices!!.postValue(listaFacturas!!)
+
+            // Se oculta el progress bar
+            _isLoading.postValue(false)
+        }
+
+        /*
         val casoUso: GetInvoicesUseCase
 
         // Se crea el caso de uso
@@ -62,6 +75,8 @@ class ListadoViewModel(application: Application?) : AndroidViewModel(application
 
         // Se ejecuta el caso de uso
         Executors.newCachedThreadPool().execute(casoUso)
+
+         */
     }
 
     private val invoiceRepository: InvoiceRepositoryInterface
