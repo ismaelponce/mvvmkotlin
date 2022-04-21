@@ -1,2 +1,2 @@
-# practica2mvvmkotlin
-Practica 2 de listado de facturas pero en lenguaje de programacion kotlin
+# Simple MVVM app
+Simple MVVM app that displays a list of invoices and has a filter.
